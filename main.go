@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-	"go-promo-code-api/handlers"
+	"go-promo-code-api/router"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
 
@@ -17,15 +16,10 @@ func main() {
 		log.Println("No .env file found, using system environment variables")
 	}
 
-	router := mux.NewRouter()
-
-	router.HandleFunc("/codes", handlers.GetAllCodes).Methods("GET")
-	router.HandleFunc("/code", handlers.InsertCode).Methods("POST")
-	router.HandleFunc("/code/{id}", handlers.UpdateCode).Methods("PUT")
-	router.HandleFunc("/code/{id}", handlers.DeleteCode).Methods("DELETE")
+	r := router.CodeRouter()
 
 	port := os.Getenv("PORT")
 
 	fmt.Println("Server running on port", port)
-    log.Fatal(http.ListenAndServe(":"+port, router))
+    log.Fatal(http.ListenAndServe(":"+port, r))
 }
